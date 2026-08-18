@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: "Racket ${{ matrix.racket-version }} (${{ matrix.racket-variant }})"
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental || false }}
+    strategy:
+      fail-fast: false
+      matrix:
+        racket-version: ["stable"]
+        racket-variant: ["CS"]
+        include:
+          # the bleeding-edge snapshot is allowed to fail
+          - racket-version: "current"
+            racket-variant: "CS"
+            experimental: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: Bogdanp/setup-racket@v1.12
+        with:
+          architecture: x64
+          distribution: full
+          variant: ${{ matrix.racket-variant }}
+          version: ${{ matrix.racket-version }}
+
+      # installs the package plus its deps (base, redex-lib, rackcheck-lib,
+      # rackunit-lib) and build-deps; --no-docs keeps the install fast (docs are
+      # built and checked in the next step)
+      - name: Install evm-redex and its dependencies
+        run: raco pkg install --no-docs --auto --name evm-redex
+
+      # compile the whole collection, render the documents, and verify every
+      # module's imports are covered by a declared dependency
+      - name: Compile, build docs, and check package dependencies
+        run: raco setup --check-pkg-deps evm-redex
+
+      # run the tutorial's runnable examples (the library itself carries no other
+      # runnable tests — the full suite is the companion evm-redex-tests package,
+      # which is tested in its own repository)
+      - name: Run the tutorial examples
+        run: raco test tutorial

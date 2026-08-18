@@ -1,0 +1,11 @@
+#lang info
+(define collection "evm-redex")
+(define deps '("base" "redex-lib" "rackcheck-lib" "rackunit-lib"))
+(define build-deps '("scribble-lib" "racket-doc" "redex-doc" "rackcheck" "rackunit-doc"))
+(define scribblings '(("scribblings/evm-redex.scrbl" (multi-page))
+                      ("tutorial/tutorial-en.scrbl" ())
+                      ("tutorial/tutorial-pt.scrbl" ())))
+(define pkg-desc "An executable PLT Redex specification of the Ethereum Virtual Machine (multi-fork, Frontier through Prague), validated against ethereum/tests. Bundles the property-based-testing DSL, the #lang evm-redex/asm and #lang evm-redex/sim languages, and a bilingual tutorial. The test suite is the companion evm-redex-tests package.")
+(define version "0.1")
+(define pkg-authors '(Rodrigo Ribeiro))
+(define license '(Apache-2.0 OR MIT))

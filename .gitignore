@@ -1,0 +1,17 @@
+*~
+\#*
+.\#*
+.DS_Store
+compiled/
+**/compiled/
+/doc/
+
+# Native accelerator build artifacts (produced by shell.nix / nix-build)
+.native/
+.native-mcl
+result
+result-*
+
+# direnv cache / GC roots (.envrc itself is committed)
+.direnv/
+.direnv.d/
